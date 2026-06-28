@@ -7,17 +7,17 @@ metadata.
 ## Build
 
 ```sh
-cargo build --release -p stuffit-ffi
+cargo cbuild --release -p stuffit-ffi
 ```
 
 The resulting library is named `libstuffit_ffi`. The exact shared-library
-extension depends on the platform.
+extension depends on the platform. `cargo-c` also writes the generated
+pkg-config metadata into the target directory.
 
 ## Install
 
 ```sh
-cargo build --release -p stuffit-ffi
-sudo make -C stuffit-ffi install-files PREFIX=/usr/local DESTDIR=/optional/staging/root
+cargo cinstall --release -p stuffit-ffi --prefix=/usr/local --destdir=/optional/staging/root
 ```
 
 This installs the shared and static libraries plus:
@@ -27,12 +27,10 @@ include/stuffit_ffi.h       -> ${prefix}/include/stuffit_ffi.h
 pkgconfig/stuffit-ffi.pc    -> ${prefix}/lib/pkgconfig/stuffit-ffi.pc
 ```
 
-From the repository root, `make -C stuffit-ffi install` can also build and
-install in one step. Use `install-files` after a separate build when installing
-to a privileged prefix so Cargo does not need to run under `sudo`.
+For staged packaging, pass a writable `--destdir` and let the package manager
+copy that tree into the final prefix.
 
-The pkg-config file is relocatable, so it derives `prefix` from its installed
-location. A downstream project can then use:
+A downstream project can then use:
 
 ```sh
 cc example.c $(pkg-config --cflags --libs stuffit-ffi)

@@ -9,7 +9,28 @@ repository = "https://github.com/benletchford/stuffit-rs"
 
 [lib]
 name = "stuffit_ffi"
-crate-type = ["cdylib", "staticlib", "rlib"]
+
+[features]
+capi = []
 
 [dependencies]
 stuffit = { workspace = true, default-features = false }
+
+[package.metadata.capi]
+min_version = "0.10.0"
+
+[package.metadata.capi.header]
+name = "stuffit_ffi"
+subdirectory = false
+generation = false
+
+[package.metadata.capi.library]
+name = "stuffit_ffi"
+
+[package.metadata.capi.pkg_config]
+filename = "stuffit-ffi"
+name = "stuffit-ffi"
+description = "C ABI for reading and writing classic StuffIt archives"
+
+[package.metadata.capi.install.include]
+asset = [{ from = "include/stuffit_ffi.h", to = "" }]
